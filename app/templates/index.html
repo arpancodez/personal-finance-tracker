@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Dashboard</h2>
+
+  <section class="row">
+    <div class="col-sm-4">
+      <div class="card">
+        <h3>Income</h3>
+        <p class="big">₹ {{ summary.income_total | round(2) }}</p>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card">
+        <h3>Expenses</h3>
+        <p class="big">₹ {{ summary.expense_total | round(2) }}</p>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card">
+        <h3>Balance</h3>
+        <p class="big">₹ {{ summary.balance | round(2) }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h3>Monthly (last 12 months)</h3>
+    <canvas id="monthlyChart" height="120"></canvas>
+  </section>
+
+  <section>
+    <h3>Expense by Category</h3>
+    <canvas id="categoryChart" height="120"></canvas>
+  </section>
+
+  <section>
+    <h3>Recent Transactions</h3>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Note</th></tr>
+      </thead>
+      <tbody>
+        {% for t in recent %}
+        <tr>
+          <td>{{ t.date }}</td>
+          <td>{{ t.type }}</td>
+          <td>{{ t.category }}</td>
+          <td>{{ t.amount }}</td>
+          <td>{{ t.note }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    const months = {{ summary.months|tojson }};
+    const incomes = {{ summary.monthly_income|tojson }};
+    const expenses = {{ summary.monthly_expense|tojson }};
+    const categoryLabels = {{ summary.category_breakdown.keys()|list|tojson }};
+    const categoryValues = {{ summary.category_breakdown.values()|list|tojson }};
+
+    // monthly chart
+    const ctx = document.getElementById('monthlyChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [
+          { label: 'Income', data: incomes, tension: 0.3, fill: false },
+          { label: 'Expense', data: expenses, tension: 0.3, fill: false }
+        ]
+      },
+      options: { responsive: true }
+    });
+
+    // category chart
+    const ctx2 = document.getElementById('categoryChart').getContext('2d');
+    new Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        labels: categoryLabels,
+        datasets: [{ data: categoryValues }]
+      },
+      options: { responsive: true }
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>All Transactions</h2>
+
+  <div>
+    <a href="{{ url_for('export_csv') }}">Export CSV</a>
+    <form action="{{ url_for('import_csv') }}" method="post" enctype="multipart/form-data" style="display:inline-block; margin-left: 1rem;">
+      <input type="file" name="file" accept=".csv">
+      <button type="submit">Import CSV</button>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Note</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for t in pagination.items %}
+      <tr>
+        <td>{{ t.date }}</td>
+        <td>{{ t.type }}</td>
+        <td>{{ t.category }}</td>
+        <td>{{ t.amount }}</td>
+        <td>{{ t.note }}</td>
+        <td>
+          <form method="post" action="{{ url_for('delete_transaction', id=t.id) }}" onsubmit="return confirm('Delete this transaction?');">
+            <button type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    {% if pagination.has_prev %}
+      <a href="{{ url_for('transactions', page=pagination.prev_num) }}">Prev</a>
+    {% endif %}
+    Page {{ pagination.page }} / {{ pagination.pages }}
+    {% if pagination.has_next %}
+      <a href="{{ url_for('transactions', page=pagination.next_num) }}">Next</a>
+    {% endif %}
+  </div>
+{% endblock %}

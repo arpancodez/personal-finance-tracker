@@ -1,0 +1,11 @@
+body { padding: 1rem; font-family: system-ui, sans-serif; }
+header { display:flex; gap:1rem; align-items:center; margin-bottom:1rem; }
+.logo { font-weight:700; font-size:1.25rem; text-decoration:none; }
+.card { padding:1rem; border-radius:8px; background:#f8f9fa; margin-bottom:1rem; }
+.big { font-size:1.5rem; }
+table { width:100%; border-collapse: collapse; }
+table th, table td { padding:8px; border-bottom: 1px solid #eee; text-align:left; }
+footer { margin-top:2rem; color:#666; font-size:0.9rem; }
+.alert { padding:8px; margin-bottom: 1rem; border-radius:6px; }
+.alert.success { background:#e6ffed; color:#0b6623; }
+.alert.danger { background:#ffe6e6; color:#a11; }
